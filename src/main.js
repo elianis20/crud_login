@@ -220,44 +220,50 @@ document.addEventListener("DOMContentLoaded", ()=>{
   });
 });
 
-const userLogged = [{
-  1:{
+const userLogged = [
+  {
     _userName_: "Gustavo",
     _userPass_: "1234",
-    _userMail_: "gustav123@gmail.com"
+    _userMail_: "gustav123@gmail.com", 
+    _userPhoto:"",
+    _userDescription:""
   },
-  2:{
+  {
     _userName_: "Melissa",
     _userPass_: "1234",
-    _userMail_: "melissa@gmail.com"
+    _userMail_: "melissa@gmail.com", 
+    _userPhoto:"",
+    _userDescription:""
   }
-}];
+];
 
 // CREATE
 document.addEventListener("click", (probar)=>{
   probar.preventDefault()
   const formRegister = document.getElementById("register-form");
   const regButtom    = document.getElementById("btn-sign-up-form");
-  const userName     = document.getElementById("userName").value;
-  const userMail     = document.getElementById("userMail").value;
-  const userPass     = document.getElementById("userPass").value;
+  // const userName     = document.getElementById("userName").value;
+  // const userMail     = document.getElementById("userMail").value;
+  // const userPass     = document.getElementById("userPass").value;
+  
+  const [name, email] = Object.values(formRegister);
+  // console.log(name.value);
+  // console.log(email.value);
+  // console.log(pass.value);
+  
+  
+  userLogged.forEach(({ _userName_, _userMail_ }) => {
+    // console.log(_userName_, _userMail_) 
+      if (
+      name.value == _userName_){
+      console.log("This user name is already in use, please enter another");
+     };
+      if(
+      email.value == _userMail_){
+      console.log("This Email is already in use, please enter another")
+      }
+   }); 
 
-  const [name, email, pass] = Object.values(formRegister)
-
-  console.log(name.value);
-  console.log(email.value);
-  console.log(pass.value);
-  if (
-  name.value !== "" &&
-  email.value !== "" &&
-  pass.value !== ""
-) {
-  console.log("Formulario válido");
-}
-
-userLogged.forEach((element)=> {
-  console.log(Object.values(element[1]))
-})
 
 })
 
