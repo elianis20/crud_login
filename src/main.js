@@ -1,5 +1,7 @@
 import './style.css'
 
+// LOGIN SECTION //
+
 const app = document.querySelector(`#app`);
 function renderLogin() {
 app.innerHTML = ` 
@@ -76,6 +78,7 @@ app.innerHTML = `
     <!-- REGISTER -->
     <div class="w-1/2 overflow-hidden">
       <form
+        id="register-form"
         class="sign-up h-full flex flex-col justify-center items-center gap-4 transition duration-500 ease-in-out"
       >
 
@@ -103,6 +106,7 @@ app.innerHTML = `
             type="text"
             placeholder="Jhon Doe"
             class="w-full outline-none bg-transparent"
+            id="userName"
           />
         </div>
 
@@ -119,6 +123,7 @@ app.innerHTML = `
             type="text"
             placeholder="Email"
             class="w-full outline-none bg-transparent"
+            id="userMail"
           />
         </div>
 
@@ -135,12 +140,13 @@ app.innerHTML = `
             type="password"
             placeholder="******"
             class="w-full outline-none bg-transparent"
+            id="userPass"
           />
         </div>
 
         <button
           class="w-60 bg-blue-400 hover:bg-blue-600 hover:scale-105 transition duration-200 px-5 py-3 rounded-xl text-white font-semibold cursor-pointer"
-        >
+          id="btn-sign-up-form">
           REGISTER
         </button>
       </form>
@@ -194,24 +200,62 @@ app.innerHTML = `
 
 renderLogin();
 
-const container = document.querySelector(".container");
-const btnSignIn = document.getElementById("btn-sign-in");
-const btnSignUp = document.getElementById("btn-sign-up");
-
-btnSignIn.addEventListener("click", ()=>{
-    container.classList.remove("toggle");
-});
-
-btnSignUp.addEventListener("click", ()=>{
-    container.classList.add("toggle");
-});
-
 document.querySelector('#formData').addEventListener('submit', function(e){
     e.preventDefault();
     validarLogin();
+
+document.addEventListener("DOMContentLoaded", ()=>{
+  const container = document.querySelector(".container");
+  const btnSignUp = document.getElementById("btn-sign-up");
+  const btnSignIn = document.getElementById("btn-sign-in");
+
+  btnSignIn.addEventListener("click", ()=>{
+      container.classList.remove("toggle");
+  });
+  
+  btnSignUp.addEventListener("click", ()=>{
+      container.classList.add("toggle");
+  });
+  
+  });
 });
 
+const userLogged = [
+  {
+    _userName_: "Gustavo",
+    _userPass_: "1234",
+    _userMail_: "gustav123@gmail.com", 
+    _userPhoto:"",
+    _userDescription:""
+  },
+  {
+    _userName_: "Melissa",
+    _userPass_: "1234",
+    _userMail_: "melissa@gmail.com", 
+    _userPhoto:"",
+    _userDescription:""
+  }
+];
 
+// CREATE
+document.addEventListener("click", (probar)=>{
+const formRegister = document.getElementById("register-form");
+if (!formRegister) return;
+
+const regButtom = document.getElementById("btn-sign-up-form");
+const [name, email] = Object.values(formRegister);
+
+userLogged.forEach(({ _userName_, _userMail_ }) => {
+if (name.value == _userName_){
+console.log("This user name is already in use, please enter another");
+};
+if (email.value == _userMail_){
+console.log("This Email is already in use, please enter another")
+}
+});
+})
+
+// LOGIN
 
 function validarLogin() {
     const username = document.getElementById("username");
@@ -240,65 +284,80 @@ function validarLogin() {
     if (username.value === 'admin' && password.value === '1234') {
         renderCrud();
     } else {
-        alert('Usuario o contraseña incorrectos');
+        alert('Usuario o password incorrectos');
     }
     }
+
+// CRUD SECTION //
+
+// READ CARD //
 
 function renderCrud() {
-    app.innerHTML = ` <main class="min-h-screen bg-gray-100 p-8">
-    <h1 class="text-3xl font-bold mb-6">Clan Micaela</h1>
-    <div id="tarjetas" class="grid grid-cols-3 gap-4">
-    </div>
-</main>
+    app.innerHTML = `
+    <main class="min-h-screen bg-gray-100 p-8">
+        <h1 class="text-3xl font-bold mb-6">Clan Micaela</h1>
+        <div id="cards" class="grid grid-cols-3 gap-4">
+        </div>
+    </main>
     `;
-    renderTarjetas();
+    renderCards();
 }
 
-const colores = [
-  'bg-blue-100',
-  'bg-indigo-100',
-  'bg-sky-100',
-  'bg-violet-100',
-  'bg-cyan-100',
-  'bg-purple-100'
+const colors = [
+    'bg-blue-100',
+    'bg-indigo-100',
+    'bg-sky-100',
+    'bg-violet-100',
+    'bg-cyan-100',
+    'bg-purple-100'
 ];
 
-function crearTarjeta(nombre, imagen, descripcion, index) {
-    const color = colores[index % colores.length];
+function createCard(name, image, description, index) {
+    const color = colors[index % colors.length];
     return `
         <div class="${color} p-3 rounded-lg flex flex-col items-center space-y-2">
             <figure class="flex flex-col items-center space-y-2 h-60 w-70">
                 <img 
-                    src="${imagen}"
-                    alt="${nombre}"
+                    src="${image}"
+                    alt="${name}"
                     class="w-40 h-60 object-cover rounded-lg"
                 />
             </figure>
             <article>
-                <h3 class="text-2xl font-bold">${nombre}</h3>
+                <h3 class="text-2xl font-bold">${name}</h3>
             </article>
             <article class="text-justify p-3">
-                <p>${descripcion}</p>
+                <p>${description}</p>
             </article>
             <section class="flex justify-around w-full py-2">
-                <button class="bg-orange-300 hover:bg-amber-500 hover:text-stone-100 px-5 py-2 rounded">Editar</button>
-                <button class="bg-red-400 hover:text-stone-100 hover:bg-red-600 px-5 py-2 rounded">Eliminar</button>
+                <button class="bg-orange-300 hover:bg-amber-500 hover:text-stone-100 px-5 py-2 rounded">Edit</button>
+                <button data-index="${index}" class="deleteBtn bg-red-400 hover:text-stone-100 hover:bg-red-600 px-5 py-2 rounded">Delete</button>
             </section>
         </div>
     `;
 }
 
-let personas = [];
+let people = [];
 
-personas.push({
-    nombre: 'Nezuko Kamado',
-    imagen: 'https://static0.cbrimages.com/wordpress/wp-content/uploads/2023/11/nezuko-demons-slayer.jpg?w=1200&h=675&fit=crop',
-    descripcion: 'Esta es una descripción de prueba'
+people.push({
+    name: 'Nezuko Kamado',
+    image: 'https://static0.cbrimages.com/wordpress/wp-content/uploads/2023/11/nezuko-demons-slayer.jpg?w=1200&h=675&fit=crop',
+    description: 'This is a test description',
+    
 });
 
-function renderTarjetas() {
-    const contenedor = document.getElementById('tarjetas');
-    contenedor.innerHTML = personas.map((persona, index) => 
-        crearTarjeta(persona.nombre, persona.imagen, persona.descripcion, index)
+function renderCards() {
+    const container = document.getElementById('cards');
+    container.innerHTML = people.map((person, index) =>
+        createCard(person.name, person.image, person.description, index)
     ).join('');
 }
+
+document.addEventListener('click', function(e){
+  if (e.target.classList.contains('deleteBtn')) {
+    const index = e.target.dataset.index;
+    people.splice(index, 1)
+    renderCards();
+    
+  }
+});
